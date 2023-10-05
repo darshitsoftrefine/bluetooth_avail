@@ -36,7 +36,6 @@ class _SerialBlueState extends State<SerialBlue> {
 
   Future<void> connecting(BluetoothDevice device) async {
     await BluetoothConnection.toAddress(device.address);
-    await serial.disconnect();
   }
   // Future<void> connect(BluetoothDevice device) async {
   //   BluetoothConnection connection;
@@ -103,8 +102,7 @@ class _SerialBlueState extends State<SerialBlue> {
                         subtitle: Text(_devices[index].address),
                         leading: const Icon(Icons.bluetooth),
                         trailing: ElevatedButton(onPressed: () async{
-                          connectToAddress(_devices[index].address);
-                          //serial.connect(_devices[index]);
+                          connect(_devices[index].address);
                           setState(() {
                             if (selectedItem.contains(index)) {
                               selectedItem.remove(index);
