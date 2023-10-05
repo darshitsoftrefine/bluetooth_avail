@@ -37,12 +37,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_blue_plus: ^1.4.0
   flutter_blue: ^0.8.0
-  get: ^4.6.1
   audioplayers: ^4.1.0
   flutter_bluetooth_serial: ^0.4.0
   flutter_reactive_ble: ^5.2.0
-  permission_handler: ^11.0.0
-  location_permissions: ^4.0.0
 
 dev_dependencies:
   flutter_test:

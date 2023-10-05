@@ -11,26 +11,46 @@ class React extends StatefulWidget {
 class _ReactState extends State<React> {
 
   final flutterReactiveBle = FlutterReactiveBle();
+  List devices = [];
 
   void scan() {
-    flutterReactiveBle.scanForDevices(
-        withServices: [], scanMode: ScanMode.lowLatency).listen((
-        device) {
-      print("device $device");
-    }, onError: () {
-      print("error");
-    });
+    try{
+    flutterReactiveBle.scanForDevices(withServices: [], scanMode: ScanMode.lowLatency).listen((device) {
+      setState(() {
+        devices.add(device.name);
+      });
+    },
+    );
+        } catch(e){
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: ElevatedButton(
-        onPressed: (){
-          scan();
-        },
-        child: Text("Scanning"),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: (){
+                scan();
+              },
+              child: Text("Scanning"),
+            ),
+            ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: devices.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(devices.toString()),
+                );
+              },
+
+            )
+          ],
+        ),
       ),
     );
   }

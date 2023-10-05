@@ -11,19 +11,29 @@ class BluePlus extends StatefulWidget {
 class _BluePlusState extends State<BluePlus> {
 
   FlutterBluePlus flutterBluePlus = FlutterBluePlus();
-  void scan(){
-    String name = "";
-    FlutterBluePlus.startScan(timeout: Duration(seconds: 5));
-    FlutterBluePlus.scanResults.listen((event) async {
-      for (ScanResult r in event) {
-        await r.device.connect(autoConnect: true);
-        name = r.device.localName;
-        print(' hi ${r.device.name} found! rssi: ${r.rssi}');
+  List<BluetoothDevice> devices = [];
+  Future<void> scan() async {
+    // Setup Listener for scan results.
+// device not found? see "Common Problems" in the README
+    Set<DeviceIdentifier> seen = {};
+    var subscription = FlutterBluePlus.scanResults.listen(
+            (results) {
+          for (ScanResult r in results) {
+            if (seen.contains(r.device.remoteId) == false) {
+              print('${r.device.remoteId}: "${r.advertisementData.localName}" found! rssi: ${r.rssi}');
+              seen.add(r.device.remoteId);
+            }
+          }
+        },
 
-      }
-    });
-    print("Hi $name");
-    FlutterBluePlus.stopScan();
+    );
+
+// Start scanning
+// Note: You should always call `scanResults.listen` before you call startScan!
+    await FlutterBluePlus.startScan(timeout: Duration(seconds: 10));
+
+// Stop scanning
+    await FlutterBluePlus.stopScan();
   }
 
   void connectToDevice(BluetoothDevice device) async {
@@ -35,13 +45,29 @@ class _BluePlusState extends State<BluePlus> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(28.0),
-          child: ElevatedButton(
-            onPressed: () {
-              scan();
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    scan();
 
-            },
-            child: Text("Scan"),
+                  },
+                  child: Text("Scan"),
+                ),
+                ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemCount: devices.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text(devices[index].localName),
+                    );
+                  },
 
+                )
+              ],
+            ),
           ),
         ),
       ),

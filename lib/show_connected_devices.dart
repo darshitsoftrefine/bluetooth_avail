@@ -33,10 +33,23 @@ class _ShoeConnectedDeviceState extends State<ShoeConnectedDevice> {
   }
 
 
-  Future<void> check(BluetoothDevice device) async {
-    List<BluetoothService> services = await device.discoverServices();
-    print(services);
 
+  void scan(){
+    flutterBlue.startScan(timeout: const Duration(seconds: 4));
+
+// Listen to scan results
+    var subscription = flutterBlue.scanResults.listen((results) {
+      // do something with scan results
+      for (ScanResult r in results) {
+        print('${r.device.name} found! rssi: ${r.rssi}');
+      }
+    });
+
+// Stop scanning
+    flutterBlue.stopScan();
+  }
+  Future<void> check(BluetoothDevice device) async {
+     await device.discoverServices();
   }
 
   Future<void> startScan() async {
@@ -56,8 +69,7 @@ class _ShoeConnectedDeviceState extends State<ShoeConnectedDevice> {
         children: <Widget>[
           ElevatedButton(
             onPressed: () {
-              print(devices.length);
-              startScan();
+              scan();
             },
             child: const Text('Start Scanning'),
           ),
@@ -71,7 +83,6 @@ class _ShoeConnectedDeviceState extends State<ShoeConnectedDevice> {
                   subtitle: Text(devices[index].id.toString()),
                   onTap: () async {
                     await devices[index].connect(autoConnect: true);
-                    print(devices[index].discoverServices());
                     check(devices[index]);
                     //await devices[index].disconnect();
                   },
@@ -89,4 +100,4 @@ class _ShoeConnectedDeviceState extends State<ShoeConnectedDevice> {
       ),
     );
   }
-}
+  }
