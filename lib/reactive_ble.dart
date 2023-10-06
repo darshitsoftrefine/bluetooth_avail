@@ -29,7 +29,7 @@ class _ScanningState extends State<Scanning> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Print bluetooth connected devices'),
+        title: const Text('Bluetooth connected devices'),
       ),
       body: ListView.builder(
         shrinkWrap: true,

@@ -101,7 +101,7 @@ class _SerialBlueState extends State<SerialBlue> {
                         title: _devices[index].name == null ? const SizedBox() : Text(_devices[index].name!),
                         subtitle: Text(_devices[index].address),
                         leading: const Icon(Icons.bluetooth),
-                        trailing: ElevatedButton(onPressed: () async{
+                        trailing:  ElevatedButton(onPressed: () async{
                           connect(_devices[index].address);
                           setState(() {
                             if (selectedItem.contains(index)) {
@@ -110,8 +110,6 @@ class _SerialBlueState extends State<SerialBlue> {
                               selectedItem.add(index);
                             }
                           });
-                          // final player = AudioPlayer();
-                          // player.play(AssetSource('audio/aud1.mp3'));
                         }, child: selectedItem.contains(index) ? const Text("Disconnect"): const Text("Connect")),
                       ),
                     );

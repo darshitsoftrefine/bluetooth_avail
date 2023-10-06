@@ -13,8 +13,7 @@ class _BluePlusState extends State<BluePlus> {
   FlutterBluePlus flutterBluePlus = FlutterBluePlus();
   List<BluetoothDevice> devices = [];
   Future<void> scan() async {
-    // Setup Listener for scan results.
-// device not found? see "Common Problems" in the README
+
     Set<DeviceIdentifier> seen = {};
     var subscription = FlutterBluePlus.scanResults.listen(
             (results) {
@@ -28,8 +27,6 @@ class _BluePlusState extends State<BluePlus> {
 
     );
 
-// Start scanning
-// Note: You should always call `scanResults.listen` before you call startScan!
     await FlutterBluePlus.startScan(timeout: Duration(seconds: 10));
 
 // Stop scanning
@@ -44,30 +41,29 @@ class _BluePlusState extends State<BluePlus> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(28.0),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    scan();
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  scan();
 
-                  },
-                  child: Text("Scan"),
-                ),
-                ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: devices.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      title: Text(devices[index].localName),
-                    );
-                  },
+                },
+                child: Text("Scan"),
+              ),
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: devices.length,
+                itemBuilder: (BuildContext context, int index) {
+                  print(devices[index].localName);
+                  return ListTile(
+                    title: Text(devices[index].localName, style: TextStyle(color: Colors.purple),),
+                  );
+                },
 
-                )
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),
